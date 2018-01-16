@@ -8,7 +8,7 @@ import './interfaces/ISophonToken.sol';
 
     The distribution version of the sophon token controller, allows contributing ether in exchange for Sophon tokens
     The price remains fixed for the entire duration of the distribution
-    Note that 20% of the contributions are the SPT token's ETH connector balance
+    Note that 20% of the contributions are the SSS token's ETH connector balance
 */
 contract DistributionController is SophonTokenController {
     uint256 public constant DURATION = 14 days;                 // distribution duration
