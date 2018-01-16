@@ -1,17 +1,17 @@
 /* global artifacts, contract, before, it, assert, web3 */
 /* eslint-disable prefer-reflect */
 
-const CrowdsaleController = artifacts.require('CrowdsaleController.sol');
+const DistributionController = artifacts.require('DistributionController.sol');
 const SophonToken = artifacts.require('SophonToken.sol');
-const TestCrowdsaleController = artifacts.require('TestCrowdsaleController.sol');
+const TestDistributionController = artifacts.require('TestDistributionController.sol');
 const utils = require('./helpers/Utils');
 
 let token;
 let tokenAddress;
 let beneficiaryAddress = '0x69aa30b306805bd17488ce957d03e3c0213ee9e6';
-let startTime = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60; // crowdsale hasn't started
-let startTimeInProgress = Math.floor(Date.now() / 1000) - 12 * 60 * 60; // ongoing crowdsale
-let startTimeFinished = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60; // ongoing crowdsale
+let startTime = Math.floor(Date.now() / 1000) + 30 * 24 * 60 * 60; // distribution hasn't started
+let startTimeInProgress = Math.floor(Date.now() / 1000) - 12 * 60 * 60; // ongoing distribution
+let startTimeFinished = Math.floor(Date.now() / 1000) - 30 * 24 * 60 * 60; // ongoing distribution
 let realCap = 1000;
 let realCapLarge = 1000000000000000000000000000000000000;
 let realCapKey = 234;
@@ -20,7 +20,7 @@ let realEtherCapHashLarge = '0xe8de42a704eab00275ed4cdc7e4e626633a0ce70bc986007a
 let badContributionGasPrice = 50000000001;
 
 async function generateDefaultController() {
-    return await CrowdsaleController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash);
+    return await DistributionController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash);
 }
 
 // used by contribution tests, creates a controller that's already in progress
@@ -28,7 +28,7 @@ async function initController(accounts, activate, startTimeOverride = startTimeI
     token = await SophonToken.new('Token1', 'TKN1', 2);
     tokenAddress = token.address;
 
-    let controller = await TestCrowdsaleController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash, startTimeOverride);
+    let controller = await TestDistributionController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash, startTimeOverride);
     let controllerAddress = controller.address;
 
     if (activate) {
@@ -43,7 +43,7 @@ function getContributionAmount(transaction, logIndex = 0) {
     return transaction.logs[logIndex].args._return.toNumber();
 }
 
-contract('CrowdsaleController', (accounts) => {
+contract('DistributionController', (accounts) => {
     before(async () => {
         let token = await SophonToken.new('Token1', 'TKN1', 2);
         tokenAddress = token.address;
@@ -66,7 +66,7 @@ contract('CrowdsaleController', (accounts) => {
 
     it('should throw when attempting to construct a controller with no token', async () => {
         try {
-            await CrowdsaleController.new('0x0', startTime, beneficiaryAddress, realEtherCapHash);
+            await DistributionController.new('0x0', startTime, beneficiaryAddress, realEtherCapHash);
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -76,7 +76,7 @@ contract('CrowdsaleController', (accounts) => {
 
     it('should throw when attempting to construct a controller with start time that has already passed', async () => {
         try {
-            await CrowdsaleController.new(tokenAddress, 10000000, beneficiaryAddress, realEtherCapHash);
+            await DistributionController.new(tokenAddress, 10000000, beneficiaryAddress, realEtherCapHash);
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -86,7 +86,7 @@ contract('CrowdsaleController', (accounts) => {
 
     it('should throw when attempting to construct a controller without beneficiary address', async () => {
         try {
-            await CrowdsaleController.new(tokenAddress, startTime, '0x0', realEtherCapHash);
+            await DistributionController.new(tokenAddress, startTime, '0x0', realEtherCapHash);
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -96,7 +96,7 @@ contract('CrowdsaleController', (accounts) => {
 
     it('should throw when attempting to construct a controller without ether cap hash', async () => {
         try {
-            await CrowdsaleController.new(tokenAddress, startTime, beneficiaryAddress, 0);
+            await DistributionController.new(tokenAddress, startTime, beneficiaryAddress, 0);
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -184,7 +184,7 @@ contract('CrowdsaleController', (accounts) => {
     });
 
     it('should throw when the owner attempts to enable the real ether cap with a value larger than the initial cap', async () => {
-        let controller = await CrowdsaleController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHashLarge);
+        let controller = await DistributionController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHashLarge);
 
         try {
             await controller.enableRealCap(realCapLarge, realCapKey);
@@ -247,7 +247,7 @@ contract('CrowdsaleController', (accounts) => {
         }
     });
 
-    it('should throw when attempting to contribute ether before the crowdsale has started', async () => {
+    it('should throw when attempting to contribute ether before the distribution has started', async () => {
         let controller = await initController(accounts, true, startTime);
 
         try {
@@ -259,7 +259,7 @@ contract('CrowdsaleController', (accounts) => {
         }
     });
 
-    it('should throw when attempting to contribute ether after the crowdsale has finished', async () => {
+    it('should throw when attempting to contribute ether after the distribution has finished', async () => {
         let controller = await initController(accounts, true, startTimeFinished);
 
         try {

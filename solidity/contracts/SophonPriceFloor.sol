@@ -12,8 +12,8 @@ import './interfaces/ISophonToken.sol';
     'Owned' is specified here for readability reasons
 */
 contract SophonPriceFloor is Owned, TokenHolder {
-    uint256 public constant TOKEN_PRICE_N = 1;      // crowdsale price in wei (numerator)
-    uint256 public constant TOKEN_PRICE_D = 100;    // crowdsale price in wei (denominator)
+    uint256 public constant TOKEN_PRICE_N = 1;      // distribution price in wei (numerator)
+    uint256 public constant TOKEN_PRICE_D = 100;    // distribution price in wei (denominator)
 
     string public version = '0.1';
     ISophonToken public token; // sophon token the contract allows selling

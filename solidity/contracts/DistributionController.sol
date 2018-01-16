@@ -4,22 +4,22 @@ import './Utils.sol';
 import './interfaces/ISophonToken.sol';
 
 /*
-    Crowdsale v0.1
+    Distribution v0.1
 
-    The crowdsale version of the sophon token controller, allows contributing ether in exchange for Sophon tokens
-    The price remains fixed for the entire duration of the crowdsale
+    The distribution version of the sophon token controller, allows contributing ether in exchange for Sophon tokens
+    The price remains fixed for the entire duration of the distribution
     Note that 20% of the contributions are the SPT token's ETH connector balance
 */
-contract CrowdsaleController is SophonTokenController {
-    uint256 public constant DURATION = 14 days;                 // crowdsale duration
+contract DistributionController is SophonTokenController {
+    uint256 public constant DURATION = 14 days;                 // distribution duration
     uint256 public constant TOKEN_PRICE_N = 1;                  // initial price in wei (numerator)
     uint256 public constant TOKEN_PRICE_D = 100;                // initial price in wei (denominator)
     uint256 public constant MAX_GAS_PRICE = 50000000000 wei;    // maximum gas price for contribution transactions
 
     string public version = '0.1';
 
-    uint256 public startTime = 0;                   // crowdsale start time (in seconds)
-    uint256 public endTime = 0;                     // crowdsale end time (in seconds)
+    uint256 public startTime = 0;                   // distribution start time (in seconds)
+    uint256 public endTime = 0;                     // distribution end time (in seconds)
     uint256 public totalEtherCap = 1000000 ether;   // current ether contribution cap, initialized with a temp value as a safety mechanism until the real cap is revealed
     uint256 public totalEtherContributed = 0;       // ether contributed so far
     bytes32 public realEtherCapHash;                // ensures that the real cap is predefined on deployment and cannot be changed later
@@ -31,11 +31,11 @@ contract CrowdsaleController is SophonTokenController {
     /**
         @dev constructor
 
-        @param _token          sophon token the crowdsale is for
-        @param _startTime      crowdsale start time
+        @param _token          sophon token the distribution is for
+        @param _startTime      distribution start time
         @param _beneficiary    address to receive all ether contributions
     */
-    function CrowdsaleController(ISophonToken _token, uint256 _startTime, address _beneficiary, bytes32 _realEtherCapHash)
+    function DistributionController(ISophonToken _token, uint256 _startTime, address _beneficiary, bytes32 _realEtherCapHash)
         SophonTokenController(_token)
         validAddress(_beneficiary)
         earlierThan(_startTime)
@@ -119,7 +119,7 @@ contract CrowdsaleController is SophonTokenController {
 
     /**
         @dev ETH contribution
-        can only be called during the crowdsale
+        can only be called during the distribution
 
         @return tokens issued in return
     */

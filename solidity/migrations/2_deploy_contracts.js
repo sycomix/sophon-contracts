@@ -14,7 +14,7 @@ const SophonGasPriceLimit = artifacts.require('SophonGasPriceLimit.sol');
 const SophonQuickConverter = artifacts.require('SophonQuickConverter.sol');
 const SophonConverterExtensions = artifacts.require('SophonConverterExtensions.sol');
 const SophonConverter = artifacts.require('SophonConverter.sol');
-const CrowdsaleController = artifacts.require('CrowdsaleController.sol');
+const DistributionController = artifacts.require('DistributionController.sol');
 
 module.exports = async (deployer) => {
     deployer.deploy(Utils);
@@ -30,5 +30,5 @@ module.exports = async (deployer) => {
     deployer.deploy(SophonQuickConverter);
     deployer.deploy(SophonConverterExtensions, '0x125463', '0x145463', '0x125763');
     deployer.deploy(SophonConverter, SophonToken.address, '0x124', 0, '0x0', 0);
-    deployer.deploy(CrowdsaleController, SophonToken.address, 4102444800, '0x125', 1);
+    deployer.deploy(DistributionController, SophonToken.address, 4102444800, '0x125', 1);
 };
