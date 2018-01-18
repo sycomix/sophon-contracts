@@ -11,7 +11,7 @@ let tokenAddress;
 
 // initializes a new controller with a new token and optionally transfers ownership from the token to the controller
 async function initController(accounts, activate) {
-    token = await SophonToken.new('Token1', 'TKN1', 2);
+    token = await SophonToken.new('Sophon', 'SSS', 2);
     let controller = await SophonTokenController.new(token.address);
 
     if (activate) {
@@ -24,7 +24,7 @@ async function initController(accounts, activate) {
 
 contract('SophonTokenController', (accounts) => {
     before(async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         tokenAddress = token.address;
     });
 
@@ -45,7 +45,7 @@ contract('SophonTokenController', (accounts) => {
     });
 
     it('verifies that the owner can accept token ownership', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let controller = await SophonTokenController.new(token.address);
         await token.transferOwnership(controller.address);
         await controller.acceptTokenOwnership();
@@ -54,7 +54,7 @@ contract('SophonTokenController', (accounts) => {
     });
 
     it('should throw when a non owner attempts to accept token ownership', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let controller = await SophonTokenController.new(token.address);
         await token.transferOwnership(controller.address);
 
@@ -68,7 +68,7 @@ contract('SophonTokenController', (accounts) => {
     });
 
     it('verifies that the owner can transfer token ownership', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let controller = await SophonTokenController.new(token.address);
         await token.transferOwnership(controller.address);
         await controller.acceptTokenOwnership();
@@ -82,7 +82,7 @@ contract('SophonTokenController', (accounts) => {
     });
 
     it('should throw when the owner attempts to transfer token ownership while the controller is not active', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let controller = await SophonTokenController.new(token.address);
         await token.transferOwnership(controller.address);
 
@@ -98,7 +98,7 @@ contract('SophonTokenController', (accounts) => {
     });
 
     it('should throw when a non owner attempts to transfer token ownership', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let controller = await SophonTokenController.new(token.address);
         await token.transferOwnership(controller.address);
         await controller.acceptTokenOwnership();

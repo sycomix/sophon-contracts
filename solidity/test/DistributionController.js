@@ -25,7 +25,7 @@ async function generateDefaultController() {
 
 // used by contribution tests, creates a controller that's already in progress
 async function initController(accounts, activate, startTimeOverride = startTimeInProgress) {
-    token = await SophonToken.new('Token1', 'TKN1', 2);
+    token = await SophonToken.new('Sophon', 'SSS', 2);
     tokenAddress = token.address;
 
     let controller = await TestDistributionController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash, startTimeOverride);
@@ -45,7 +45,7 @@ function getContributionAmount(transaction, logIndex = 0) {
 
 contract('DistributionController', (accounts) => {
     before(async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         tokenAddress = token.address;
     });
 

@@ -24,7 +24,7 @@ let connectorTokenAddress2 = '0x32f0f93396f0865d7ce412695beb3c3ad9ccca75';
 
 // used by purchase/sale tests
 async function initConverter(accounts, activate) {
-    token = await SophonToken.new('Token1', 'TKN1', 2);
+    token = await SophonToken.new('Sophon', 'SSS', 2);
     tokenAddress = token.address;
 
     connectorToken = await TestERC20Token.new('ERC Token 1', 'ERC1', 100000);
@@ -63,7 +63,7 @@ function getConversionAmount(transaction, logIndex = 0) {
 
 contract('SophonConverter', (accounts) => {
     before(async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let formula = await SophonFormula.new();
         let gasPriceLimit = await SophonGasPriceLimit.new(gasPrice);
         let quickConverter = await SophonQuickConverter.new();
@@ -328,7 +328,7 @@ contract('SophonConverter', (accounts) => {
     });
 
     it('should throw when attempting to add a connector when the converter is active', async () => {
-        let token = await SophonToken.new('Token1', 'TKN1', 2);
+        let token = await SophonToken.new('Sophon', 'SSS', 2);
         let converter = await SophonConverter.new(token.address, converterExtensionsAddress, 0, '0x0', 0);
         token.transferOwnership(converter.address);
         converter.acceptTokenOwnership();

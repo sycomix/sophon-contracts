@@ -12,7 +12,7 @@ const TestERC20Token = artifacts.require('TestERC20Token.sol');
 const utils = require('./helpers/Utils');
 
 let etherToken;
-let sophonToken1;
+let sophonSophon;
 let sophonToken2;
 let sophonToken3;
 let sophonToken4;
@@ -22,12 +22,12 @@ let converter1;
 let converter2;
 let converter3;
 let converter4;
-let sophonToken1QuickBuyPath;
+let sophonSophonQuickBuyPath;
 let sophonToken2QuickBuyPath;
 let sophonToken3QuickBuyPath;
 let sophonToken4QuickBuyPath;
 let erc20QuickBuyPath;
-let sophonToken1QuickSellPath;
+let sophonSophonQuickSellPath;
 let sophonToken2QuickSellPath;
 
 /*
@@ -35,7 +35,7 @@ Token network structure:
 
          SophonToken2
          /         \
-    SophonToken1   SophonToken3
+    SophonSophon   SophonToken3
           \          \
            \        SophonToken4
             \        /      \
@@ -56,8 +56,8 @@ contract('SophonConverter', (accounts) => {
 
         await quickConverter.registerEtherToken(etherToken.address, true);
 
-        sophonToken1 = await SophonToken.new('Token1', 'TKN1', 2);
-        await sophonToken1.issue(accounts[0], 1000000);
+        sophonSophon = await SophonToken.new('Sophon', 'SSS', 2);
+        await sophonSophon.issue(accounts[0], 1000000);
 
         sophonToken2 = await SophonToken.new('Token2', 'TKN2', 2);
         await sophonToken2.issue(accounts[0], 2000000);
@@ -70,10 +70,10 @@ contract('SophonConverter', (accounts) => {
 
         erc20Token = await TestERC20Token.new('ERC20Token', 'ERC5', 1000000);
 
-        converter1 = await SophonConverter.new(sophonToken1.address, converterExtensionsAddress, 0, etherToken.address, 250000);
+        converter1 = await SophonConverter.new(sophonSophon.address, converterExtensionsAddress, 0, etherToken.address, 250000);
         converter1.address = converter1.address;
 
-        converter2 = await SophonConverter.new(sophonToken2.address, converterExtensionsAddress, 0, sophonToken1.address, 300000);
+        converter2 = await SophonConverter.new(sophonToken2.address, converterExtensionsAddress, 0, sophonSophon.address, 300000);
         converter2.address = converter2.address;
         await converter2.addConnector(sophonToken3.address, 150000, false);
 
@@ -85,13 +85,13 @@ contract('SophonConverter', (accounts) => {
         await converter4.addConnector(erc20Token.address, 220000, false);
 
         await etherToken.transfer(converter1.address, 50000);
-        await sophonToken1.transfer(converter2.address, 40000);
+        await sophonSophon.transfer(converter2.address, 40000);
         await sophonToken3.transfer(converter2.address, 25000);
         await sophonToken4.transfer(converter3.address, 30000);
         await etherToken.transfer(converter4.address, 20000);
         await erc20Token.transfer(converter4.address, 35000);
 
-        await sophonToken1.transferOwnership(converter1.address);
+        await sophonSophon.transferOwnership(converter1.address);
         await converter1.acceptTokenOwnership();
 
         await sophonToken2.transferOwnership(converter2.address);
@@ -103,26 +103,26 @@ contract('SophonConverter', (accounts) => {
         await sophonToken4.transferOwnership(converter4.address);
         await converter4.acceptTokenOwnership();
 
-        sophonToken1QuickBuyPath = [etherToken.address, sophonToken1.address, sophonToken1.address];
-        sophonToken2QuickBuyPath = [etherToken.address, sophonToken1.address, sophonToken1.address, sophonToken2.address, sophonToken2.address];
+        sophonSophonQuickBuyPath = [etherToken.address, sophonSophon.address, sophonSophon.address];
+        sophonToken2QuickBuyPath = [etherToken.address, sophonSophon.address, sophonSophon.address, sophonToken2.address, sophonToken2.address];
         sophonToken3QuickBuyPath = [etherToken.address, sophonToken4.address, sophonToken4.address, sophonToken3.address, sophonToken4.address];
         sophonToken4QuickBuyPath = [etherToken.address, sophonToken4.address, sophonToken4.address];
         erc20QuickBuyPath = [etherToken.address, sophonToken4.address, erc20Token.address];
 
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
         await converter2.setQuickBuyPath(sophonToken2QuickBuyPath);
         await converter3.setQuickBuyPath(sophonToken3QuickBuyPath);
         await converter4.setQuickBuyPath(sophonToken4QuickBuyPath);
 
-        sophonToken1QuickSellPath = [sophonToken1.address, sophonToken1.address, etherToken.address];
-        sophonToken2QuickSellPath = [sophonToken2.address, sophonToken2.address, sophonToken1.address, sophonToken1.address, etherToken.address];
+        sophonSophonQuickSellPath = [sophonSophon.address, sophonSophon.address, etherToken.address];
+        sophonToken2QuickSellPath = [sophonToken2.address, sophonToken2.address, sophonSophon.address, sophonSophon.address, etherToken.address];
     });
 
     it('verifies that the owner can set the quick buy path', async () => {
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
 
         let quickBuyPathLength = await converter1.getQuickBuyPathLength.call();
-        assert.equal(quickBuyPathLength, sophonToken1QuickBuyPath.length);
+        assert.equal(quickBuyPathLength, sophonSophonQuickBuyPath.length);
     });
 
     it('verifies that the owner can clear the quick buy path', async () => {
@@ -138,26 +138,26 @@ contract('SophonConverter', (accounts) => {
         let prevQuickBuyPathLength = await converter1.getQuickBuyPathLength.call();
         assert.equal(prevQuickBuyPathLength, 0);
 
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
         let newQuickBuyPathLength = await converter1.getQuickBuyPathLength.call();
-        assert.equal(newQuickBuyPathLength, sophonToken1QuickBuyPath.length);
+        assert.equal(newQuickBuyPathLength, sophonSophonQuickBuyPath.length);
     });
 
     it('verifies the quick buy path values after the owner sets one', async () => {
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
 
         let newQuickBuyPathLength = await converter1.getQuickBuyPathLength.call();
-        assert.equal(newQuickBuyPathLength, sophonToken1QuickBuyPath.length);
+        assert.equal(newQuickBuyPathLength, sophonSophonQuickBuyPath.length);
 
         for (let i = 0; i < newQuickBuyPathLength; ++i) {
             let quickBuyPathElement = await converter1.quickBuyPath.call(i);
-            assert.equal(quickBuyPathElement, sophonToken1QuickBuyPath[i]);
+            assert.equal(quickBuyPathElement, sophonSophonQuickBuyPath[i]);
         }
     });
 
     it('should throw when a non owner attempts to set the quick buy path', async () => {
         try {
-            await converter1.setQuickBuyPath(sophonToken1QuickBuyPath, { from: accounts[1] });
+            await converter1.setQuickBuyPath(sophonSophonQuickBuyPath, { from: accounts[1] });
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -191,7 +191,7 @@ contract('SophonConverter', (accounts) => {
 
     it('should throw when the owner attempts to set a quick buy path with an invalid length', async () => {
         try {
-            await converter1.setQuickBuyPath([etherToken.address, sophonToken1.address]);
+            await converter1.setQuickBuyPath([etherToken.address, sophonSophon.address]);
             assert(false, "didn't throw");
         }
         catch (error) {
@@ -210,11 +210,11 @@ contract('SophonConverter', (accounts) => {
     });
 
     it('verifies that quick buy with a single converter results in increased balance for the buyer', async () => {
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
-        let prevBalance = await sophonToken1.balanceOf.call(accounts[1]);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
+        let prevBalance = await sophonSophon.balanceOf.call(accounts[1]);
 
-        await converter1.quickConvert(sophonToken1QuickBuyPath, 100, 1, { from: accounts[1], value: 100 });
-        let newBalance = await sophonToken1.balanceOf.call(accounts[1]);
+        await converter1.quickConvert(sophonSophonQuickBuyPath, 100, 1, { from: accounts[1], value: 100 });
+        let newBalance = await sophonSophon.balanceOf.call(accounts[1]);
 
         assert.isAbove(newBalance.toNumber(), prevBalance.toNumber(), "new balance isn't higher than previous balance");
     });
@@ -254,7 +254,7 @@ contract('SophonConverter', (accounts) => {
         let prevBalance = await sophonToken2.balanceOf.call(accounts[0]);
 
         let token1Return = await converter1.getPurchaseReturn(etherToken.address, 100000);
-        let token2Return = await converter2.getPurchaseReturn(sophonToken1.address, token1Return);
+        let token2Return = await converter2.getPurchaseReturn(sophonSophon.address, token1Return);
 
         await converter2.quickConvert(sophonToken2QuickBuyPath, 100000, token2Return, { value: 100000 });
         let newBalance = await sophonToken2.balanceOf.call(accounts[0]);
@@ -287,13 +287,13 @@ contract('SophonConverter', (accounts) => {
     });
 
     it('verifies the caller balances after selling directly for ether with a single converter', async () => {
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
         let prevETHBalance = web3.eth.getBalance(accounts[0]);
-        let prevTokenBalance = await sophonToken1.balanceOf.call(accounts[0]);
+        let prevTokenBalance = await sophonSophon.balanceOf.call(accounts[0]);
 
-        let res = await converter1.quickConvert(sophonToken1QuickSellPath, 10000, 1);
+        let res = await converter1.quickConvert(sophonSophonQuickSellPath, 10000, 1);
         let newETHBalance = web3.eth.getBalance(accounts[0]);
-        let newTokenBalance = await sophonToken1.balanceOf.call(accounts[0]);
+        let newTokenBalance = await sophonSophon.balanceOf.call(accounts[0]);
 
         let transaction = web3.eth.getTransaction(res.tx);
         let transactionCost = transaction.gasPrice.times(res.receipt.cumulativeGasUsed);
@@ -329,21 +329,21 @@ contract('SophonConverter', (accounts) => {
     });
 
     it('verifies the caller balances after converting from one token to another with multiple converters', async () => {
-        await converter1.setQuickBuyPath(sophonToken1QuickBuyPath);
+        await converter1.setQuickBuyPath(sophonSophonQuickBuyPath);
 
-        let path = [sophonToken1.address,
+        let path = [sophonSophon.address,
                     sophonToken2.address, sophonToken2.address,
                     sophonToken2.address, sophonToken3.address,
                     sophonToken3.address, sophonToken4.address];
 
-        let prevToken1Balance = await sophonToken1.balanceOf.call(accounts[0]);
+        let prevSophonBalance = await sophonSophon.balanceOf.call(accounts[0]);
         let prevToken4Balance = await sophonToken4.balanceOf.call(accounts[0]);
 
         await converter1.quickConvert(path, 1000, 1);
-        let newToken1Balance = await sophonToken1.balanceOf.call(accounts[0]);
+        let newSophonBalance = await sophonSophon.balanceOf.call(accounts[0]);
         let newToken4Balance = await sophonToken4.balanceOf.call(accounts[0]);
 
         assert(newToken4Balance.greaterThan(prevToken4Balance), "bought token balance isn't higher than previous balance");
-        assert(newToken1Balance.lessThan(prevToken1Balance), "sold token balance isn't lower than previous balance");
+        assert(newSophonBalance.lessThan(prevSophonBalance), "sold token balance isn't lower than previous balance");
     });
 });
