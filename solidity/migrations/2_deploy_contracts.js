@@ -23,7 +23,7 @@ module.exports = async (deployer) => {
     deployer.deploy(TokenHolder);
     deployer.deploy(ERC20Token, 'DummyToken', 'DUM', 0);
     deployer.deploy(EtherToken);
-    await deployer.deploy(SophonToken, 'Token1', 'TKN1', 2);
+    await deployer.deploy(SophonToken, 'Sophon', 'SSS', 2);
     deployer.deploy(SophonTokenController, SophonToken.address);
     deployer.deploy(SophonFormula);
     deployer.deploy(SophonGasPriceLimit, '22000000000');
