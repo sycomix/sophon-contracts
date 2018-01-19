@@ -14,7 +14,7 @@ contract DistributionController is SophonTokenController {
     uint256 public constant DURATION = 14 days;                 // distribution duration
     uint256 public constant TOKEN_PRICE_N = 1;                  // initial price in wei (numerator)
     uint256 public constant TOKEN_PRICE_D = 100;                // initial price in wei (denominator)
-    uint256 public constant MAX_GAS_PRICE = 50000000000 wei;    // maximum gas price for contribution transactions
+    uint256 public constant MAX_GAS_PRICE = 100000000000 wei;    // maximum gas price for contribution transactions
 
     string public version = '0.1';
 
@@ -47,7 +47,7 @@ contract DistributionController is SophonTokenController {
         realEtherCapHash = _realEtherCapHash;
     }
 
-    // verifies that the gas price is lower than 50 gwei
+    // verifies that the gas price is lower than 100 gwei
     modifier validGasPrice() {
         assert(tx.gasprice <= MAX_GAS_PRICE);
         _;

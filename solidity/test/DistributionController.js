@@ -17,7 +17,7 @@ let realCapLarge = 1000000000000000000000000000000000000;
 let realCapKey = 234;
 let realEtherCapHash = '0xd3a40f1165164f13f237cc938419cc292e66b7bb3aa190f21087a3813c5ae1ca';  // sha3(uint256(1000), uint256(234))
 let realEtherCapHashLarge = '0xe8de42a704eab00275ed4cdc7e4e626633a0ce70bc986007a037e3ff699f4381';  // sha3(uint256(1000000000000000000000000000000000000), uint256(234))
-let badContributionGasPrice = 50000000001;
+let badContributionGasPrice = 100000000001;
 
 async function generateDefaultController() {
     return await DistributionController.new(tokenAddress, startTime, beneficiaryAddress, realEtherCapHash);
