@@ -43,9 +43,9 @@ def Main():
         server_name = arg[len('server_name='):] if arg.startswith('server_name=') else server_name
         database_name = arg[len('database_name='):] if arg.startswith('database_name=') else database_name
     if username and password:
-        uri = 'mongodb://{}:{}@{}/{}'.format(username, password, server_name, database_name)
+        uri = f'mongodb://{username}:{password}@{server_name}/{database_name}'
     else:
-        uri = 'mongodb://{}/{}'.format(server_name, database_name)
+        uri = f'mongodb://{server_name}/{database_name}'
     TestAll(pymongo.MongoClient(uri)[database_name]['sale'])
 
 

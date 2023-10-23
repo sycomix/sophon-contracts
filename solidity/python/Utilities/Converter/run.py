@@ -11,14 +11,12 @@ engine = Engine()
 
 def main():
     fileName = argv[1] if len(argv) > 1 else 'example_commands.json'
-    fileDesc = open(fileName)
-    fileData = fileDesc.read()
-    fileDesc.close()
+    with open(fileName) as fileDesc:
+        fileData = fileDesc.read()
     execute(loads(fileData))
     fileName = argv[2] if len(argv) > 2 else 'example_report.csv'
-    fileDesc = open(fileName,'w')
-    fileDesc.write(report2csv())
-    fileDesc.close()
+    with open(fileName,'w') as fileDesc:
+        fileDesc.write(report2csv())
 
 
 def execute(commands):
@@ -65,26 +63,29 @@ def report2csv():
         if len(entries) > 2:
             rows += [tuple2csv(sign,first,second,False) for first,second in zip(entries,entries[1:])]
     allLens = [[len(col) for col in row.split(',')] for row in rows]
-    maxLens = [max([row[n] for row in allLens]) for n in range(len(allLens[0]))]
+    maxLens = [max(row[n] for row in allLens) for n in range(len(allLens[0]))]
     fmtStrs = ['{}{}{}'.format('{:',maxLen,'s}') for maxLen in maxLens]
     return '\n'.join([' , '.join([first.format(second) for first,second in zip(fmtStrs,row.split(','))]) for row in rows])+'\n'
 
 
 def tuple2csv(sign,first,second,title):
-    return ','.join(col for col in
-    [
-        '{:.2f}'.format(first['amount']),
-        '{}'    .format(first['currency']),
-        '{:.2f}'.format(second['amount']),
-        '{}'    .format(second['currency']),
-        '{:.2f}'.format([first,second][(sign+1)/2]['amount']),
-        '{}'    .format([first,second][(sign+1)/2]['currency']),
-        '{:.2f}'.format(first['amount']/second['amount']) if title else '',
-        '{:.2f}'.format(first['supply']),
-        '{:.2f}'.format(first['balance']),
-        '{:.2f}'.format(second['supply']),
-        '{:.2f}'.format(second['balance'])
-    ])
+    return ','.join(
+        [
+            '{:.2f}'.format(first['amount']),
+            f"{first['currency']}",
+            '{:.2f}'.format(second['amount']),
+            f"{second['currency']}",
+            '{:.2f}'.format([first, second][(sign + 1) / 2]['amount']),
+            f"{[first, second][(sign + 1) / 2]['currency']}",
+            '{:.2f}'.format(first['amount'] / second['amount'])
+            if title
+            else '',
+            '{:.2f}'.format(first['supply']),
+            '{:.2f}'.format(first['balance']),
+            '{:.2f}'.format(second['supply']),
+            '{:.2f}'.format(second['balance']),
+        ]
+    )
 
 
 main()

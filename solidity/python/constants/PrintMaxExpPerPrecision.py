@@ -14,7 +14,7 @@ assert((MAX_PRECISION+1) % NUM_OF_VALUES_PER_ROW == 0)
 
 def getMaxExp(precision,factor):
     maxExp = maxExpArray[MIN_PRECISION]
-    for p in range (MIN_PRECISION,precision):
+    for _ in range (MIN_PRECISION,precision):
         maxExp = safeMul(maxExp,factor) >> MAX_PRECISION
         fixedExpSafe(maxExp,precision)
     return maxExp

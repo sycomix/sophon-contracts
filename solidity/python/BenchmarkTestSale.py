@@ -7,13 +7,15 @@ def formulaTest(supply, balance, weight, amount):
     resultSolidityPort = FormulaSolidityPort.calculateSaleReturn(supply, balance, weight, amount)
     resultNativePython = FormulaNativePython.calculateSaleReturn(supply, balance, weight, amount)
     if resultSolidityPort > resultNativePython:
-        error = ['Implementation Error:']
-        error.append('supply             = {}'.format(supply))
-        error.append('balance            = {}'.format(balance))
-        error.append('weight             = {}'.format(weight))
-        error.append('amount             = {}'.format(amount))
-        error.append('resultSolidityPort = {}'.format(resultSolidityPort))
-        error.append('resultNativePython = {}'.format(resultNativePython))
+        error = [
+            'Implementation Error:',
+            f'supply             = {supply}',
+            f'balance            = {balance}',
+            f'weight             = {weight}',
+            f'amount             = {amount}',
+            f'resultSolidityPort = {resultSolidityPort}',
+            f'resultNativePython = {resultNativePython}',
+        ]
         raise BaseException('\n'.join(error))
     return resultSolidityPort / resultNativePython
 

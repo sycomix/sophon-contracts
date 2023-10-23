@@ -81,7 +81,14 @@ class Record():
         self._set(supply, balance, weight, amount, resultSolidityPort, resultNativePython, major, minor)
 
     def __str__(self):
-        return ''.join(['\n\t{} = {}'.format(var, vars(self)[var]) for var in 'supply,balance,weight,amount,resultSolidityPort,resultNativePython'.split(',')])
+        return ''.join(
+            [
+                f'\n\t{var} = {vars(self)[var]}'
+                for var in 'supply,balance,weight,amount,resultSolidityPort,resultNativePython'.split(
+                    ','
+                )
+            ]
+        )
 
     def Update(self, supply, balance, weight, amount, resultSolidityPort, resultNativePython, major, minor):
         if self.major < major or (self.major == major and self.minor < minor):
